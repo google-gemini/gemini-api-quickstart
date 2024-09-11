@@ -90,7 +90,7 @@ def chat():
 @app.route("/stream", methods=["GET"])
 def stream():
     """
-    Streams the response from the serve for
+    Streams the response from the server for
     both multi-modal and plain text requests
     """
     def generate():
