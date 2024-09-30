@@ -39,7 +39,7 @@ ALLOWED_EXTENSIONS = {
 
 # WARNING: Do not share code with you API key hard coded in it.
 # Get your Gemini API key from: https://aistudio.google.com/app/apikey
-# genai.configure(api_key="AIzaSyD69-doVDK0h8T79degDIkgkYOtnoUuMBg")
+# genai.configure(api_key="-")
 
 try:
     model = genai.GenerativeModel('gemini-1.5-pro-002')
