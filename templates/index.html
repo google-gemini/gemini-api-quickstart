@@ -41,18 +41,23 @@
         </div>
         {% endfor %}
       </div>
+      <div id="attached-files-list" class="attached-files-list"></div>
       <div class="message-input-container">
         <form action="/chat" method="post">
-          <textarea name="message" placeholder="Chat with Gemini" required></textarea>
-          <div class="button-group">
-            <button type="submit" id="send-btn">&#x2191;</button>
-          </div>
+          <textarea name="message" placeholder="Сообщение Gemini..." required></textarea>
+          <button type="submit" id="send-btn">
+            <svg viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+            </svg>
+          </button>
         </form>
+        <div id="progress-bar-container" class="progress-bar-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
       </div>
     </div>
   </div>
   <script src="{{ url_for('static', filename='chat.js') }}"></script>
-  <script src="{{ url_for('static', filename='event-listener.js') }}"></script>
 </body>
 
 </html>
