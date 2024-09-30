@@ -1,4 +1,4 @@
-import base64  # Добавьте эту строку в начало файла
+import base64  # Add this line at the beginning of the file
 
 from flask import (
     Flask,
@@ -17,18 +17,18 @@ import os
 import google.generativeai as genai
 print(f"google-generativeai version: {genai.__version__}")
 
-# Загрузка переменных окружения
+# Loading environment variables
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-# Получение API ключа из переменной окружения
+# Getting API key from environment variable
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
-    raise ValueError("API ключ не найден. Убедитесь, что файл .env существует и содержит GOOGLE_API_KEY.")
+    raise ValueError("API key not found. Make sure the .env file exists and contains GOOGLE_API_KEY.")
 
-print(f"API Key: {'*' * len(api_key)}")  # Маскируем ключ для безопасности
+print(f"API Key: {'*' * len(api_key)}")  # Masking the key for security
 
-# Настройка genai с использованием ключа из переменной окружения
+# Configuring genai using the key from the environment variable
 genai.configure(api_key=api_key)
 
 ALLOWED_EXTENSIONS = {
@@ -39,14 +39,13 @@ ALLOWED_EXTENSIONS = {
 
 # WARNING: Do not share code with you API key hard coded in it.
 # Get your Gemini API key from: https://aistudio.google.com/app/apikey
-# genai.configure(api_key="-")
 
 try:
     model = genai.GenerativeModel('gemini-1.5-pro-002')
-    response = model.generate_content("Привет, мир!", stream=False)
-    print("Тестовый ответ API:", response.text)
+    response = model.generate_content("Hello, world!", stream=False)
+    print("API test response:", response.text)
 except Exception as e:
-    print("Ошибка при тестировании API:", str(e))
+    print("Error while testing API:", str(e))
 
 model = genai.GenerativeModel('gemini-1.5-pro-002')
 
@@ -54,7 +53,7 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 
 chat_history = []
 next_message = ""
-next_files = []  # Изменено с next_image на next_files для поддержки нескольких файлов
+next_files = []  # Changed from next_image to next_files to support multiple files
 
 
 def allowed_file(filename):
@@ -67,11 +66,11 @@ def allowed_file(filename):
 def upload_file():
     global next_files
 
-    print("Получен запрос на загрузку файла")
-    print("Файлы в запросе:", request.files)
+    print("File upload request received")
+    print("Files in request:", request.files)
 
     if "file" not in request.files and "files[]" not in request.files:
-        print("Ни 'file', ни 'files[]' не найдены в request.files")
+        print("Neither 'file' nor 'files[]' found in request.files")
         return jsonify(success=False, message="No file part"), 400
 
     files = request.files.getlist("file") if "file" in request.files else request.files.getlist("files[]")
@@ -93,12 +92,12 @@ def upload_file():
             }
             next_files.append(file_info)
             uploaded_files.append({"id": file_info["id"], "name": filename})
-            print(f"Файл {filename} успешно загружен (MIME: {mime_type}, размер: {len(file_data)} байт)")
+            print(f"File {filename} successfully uploaded (MIME: {mime_type}, size: {len(file_data)} bytes)")
         else:
-            print(f"Недопустимый тип файла: {file.filename}")
+            print(f"Invalid file type: {file.filename}")
             return jsonify(success=False, message=f"File type not allowed: {file.filename}"), 400
 
-    print(f"Успешно загружено файлов: {len(uploaded_files)}")
+    print(f"Successfully uploaded files: {len(uploaded_files)}")
     return jsonify(
         success=True,
         message="Files uploaded successfully and added to the conversation",
@@ -117,9 +116,9 @@ def chat():
     global next_message, next_files, chat_history
     data = request.json
     next_message = data.get("message", "")
-    print(f"Сообщение для отправки: {next_message}")
-    print(f"Прикрепленные файлы: {', '.join([f['name'] for f in next_files])}")
-    print(f"Количество прикрепленных файлов: {len(next_files)}")
+    print(f"Message to send: {next_message}")
+    print(f"Attached files: {', '.join([f['name'] for f in next_files])}")
+    print(f"Number of attached files: {len(next_files)}")
     return jsonify(success=True)
 
 
@@ -130,20 +129,20 @@ def stream():
         assistant_response_content = ""
 
         try:
-            print(f"Отправка сообщения: {next_message}")
+            print(f"Sending message: {next_message}")
             content = [next_message]
             
             for file in next_files:
-                print(f"Обработка файла: {file['name']} (MIME: {file['mime_type']})")
+                print(f"Processing file: {file['name']} (MIME: {file['mime_type']})")
                 if 'data' in file and 'mime_type' in file:
                     content.append({
                         "mime_type": file["mime_type"],
                         "data": file["data"]
                     })
                 else:
-                    print(f"Ошибка: отсутствуют необходимые данные в файле {file.get('name', 'unknown')}")
+                    print(f"Error: missing necessary data in file {file.get('name', 'unknown')}")
 
-            print(f"Отправка контента в Gemini (количество файлов: {len(next_files)})")
+            print(f"Sending content to Gemini (number of files: {len(next_files)})")
             response = model.generate_content(content, stream=True)
 
             for chunk in response:
@@ -153,16 +152,16 @@ def stream():
             chat_history.append({"role": "assistant", "content": assistant_response_content})
         except Exception as e:
             print(f"Error in generate: {str(e)}")
-            print(f"Количество файлов в next_files: {len(next_files)}")
+            print(f"Number of files in next_files: {len(next_files)}")
             yield f"data: Error: {str(e)}\n\n"
 
-        next_files = []  # Очищаем список файлов после обработки
+        next_files = []  # Clearing the list of files after processing
 
     return Response(stream_with_context(generate()),
                     mimetype="text/event-stream")
 
 def get_mime_type(file_data):
-    """Определяет MIME-тип файла по его содержимому"""
+    """Determines the MIME type of a file by its content"""
     if file_data.startswith(b'\x89PNG\r\n\x1a\n'):
         return "image/png"
     elif file_data.startswith(b'\xff\xd8\xff'):
@@ -173,8 +172,8 @@ def get_mime_type(file_data):
         return "application/pdf"
     elif file_data.startswith(b'\x00\x00\x00 ftyp'):
         return "video/mp4"
-    # Добавьте другие проверки для видео и аудио форматов
-    return "application/octet-stream"  # Возвращаем общий тип, если не удалось определить
+    # Add other checks for video and audio formats
+    return "application/octet-stream"  # Return a general type if unable to determine
 
 @app.route("/remove_file", methods=["POST"])
 def remove_file():
