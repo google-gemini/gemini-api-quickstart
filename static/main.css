@@ -60,35 +60,70 @@ h3 {
 
 .message-input-container {
   width: 100%;
-  background: #fff;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  z-index: 100;
+  max-width: 600px;
+  margin: 20px auto;
+  position: relative;
 }
 
-.message-input-container form, form {
+.message-input-container form {
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  justify-content: space-between;
-}
-
-textarea, input[type="text"] {
-  border: 1px solid #c5c5d2;
-  border-radius: 8px;
-  padding: 8px 12px;
-  width: calc(100% - 20px);
-  margin: 0 10px 24px 0;
-  box-sizing: border-box;
 }
 
 textarea {
-  resize: vertical;
-  max-height: 32px;
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #0071e3;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+#send-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#send-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: #0071e3;
+  transition: fill 0.3s ease;
+}
+
+#send-btn:hover svg {
+  fill: #0077ed;
+}
+
+#send-btn:hover {
+  background-color: #f0f0f0;
+}
+
+#send-btn {
+  width: 42px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid #c5c5d2;
+  background-color: #1a73e8;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 input[type="submit"], input[type="button"], #send-btn {
@@ -248,19 +283,6 @@ input[type="button"] {
   align-self: flex-end;
 }
 
-#send-btn {
-  width: 42px;
-  height: 32px;
-  border-radius: 4px;
-  border: 1px solid #c5c5d2;
-  background-color: #1a73e8;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .file-upload-section {
   display: flex;
   flex-direction: column;
@@ -340,4 +362,57 @@ body::after {
 #filesDivider {
   border-top: 1px solid #ececf1;
   width: 100%;
+}
+
+.attached-files-list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.attached-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.attached-file-item button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.attached-files-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 2px;
+  background-color: #f0f0f0;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  overflow: hidden;
+  border-radius: 0 0 8px 8px;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background-color: #0071e3;
+  transition: width 0.3s ease;
+}
+
+.hidden {
+  display: none;
 }

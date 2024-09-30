@@ -1,74 +1,55 @@
 # Gemini API Quickstart - Python
 
-This repository contains a simple Python Flask App running with the Google AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities. The app comes with a basic UI and a Flask backend.
+This repository contains a simple Flask application in Python that works with the Google AI Gemini API. It is designed to help you get started with Gemini's multimodal capabilities. The application includes a basic user interface and a Flask backend.
 
 <img width="1271" alt="Screenshot 2024-05-07 at 7 42 28 AM" src="https://github.com/logankilpatrick/gemini-api-quickstart/assets/35577566/156ae3e0-cffa-47a3-8a71-1bded78c4632">
 
-## Basic request
+## Key Features
 
-To send your first API request with the [Gemini API Python SDK](https://github.com/google-gemini/generative-ai-python), make sure you have the right dependencies installed (see installation steps below) and then run the following code:
+The application supports the following key capabilities:
 
-```python
-import os
-import google.generativeai as genai
+1. File Upload: Users can upload various file types, including images, PDFs, videos, and audio.
+2. Chat with AI: Interact with the Gemini model through a text interface.
+3. Multimodal Input: Ability to send both text and files in a single request.
+4. Streaming Output: AI responses are displayed in real-time.
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+## Setup and Running
 
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+1. Install Python from [Python.org](https://www.python.org/downloads/).
 
-chat = model.start_chat(history=[])
-response = chat.send_message("In one sentence, explain how AI works to a child.")
-# Note that the chat object is temporarily stateful, as you send messages and get responses, you can 
-# see the history changing by doing `chat.history`.
+2. Clone this repository.
 
-print(response.text)
-```
-
-## Setup
-
-1. If you don’t have Python installed, install it [from Python.org](https://www.python.org/downloads/).
-
-2. [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) this repository.
-
-3. Create a new virtual environment:
-
-   - macOS:
-     ```bash
-     $ python -m venv venv
-     $ . venv/bin/activate
-     ```
-
-   - Windows:
-     ```cmd
-     > python -m venv venv
-     > .\venv\Scripts\activate
-     ```
-
-   - Linux:
-      ```bash
-      $ python -m venv venv
-      $ source venv/bin/activate
-      ```
-
-4. Install the requirements:
+3. Create a virtual environment:
 
    ```bash
-   $ pip install -r requirements.txt
+   python -m venv venv
+   source venv/bin/activate  # For Unix
+   # or
+   .\venv\Scripts\activate  # For Windows
    ```
 
-5. Make a copy of the example environment variables file:
+4. Install dependencies:
 
    ```bash
-   $ cp .env.example .env
+   pip install -r requirements.txt
    ```
 
-6. Add your [API key](https://ai.google.dev/gemini-api/docs/api-key) to the newly created `.env` file or as an environment variable.
+5. Create a `.env` file based on `.env.example`:
 
-7. Run the app:
+   ```bash
+   cp .env.example .env
+   ```
 
-```bash
-$ flask run
-```
+6. Add your [Gemini API key](https://ai.google.dev/gemini-api/docs/api-key) to the `.env` file.
 
-You should now be able to access the app from your browser at the following URL: [http://localhost:5000](http://localhost:5000)!
+7. Run the application:
+
+   ```bash
+   flask run
+   ```
+
+You can now open the application in your browser at [http://localhost:5000](http://localhost:5000).
+
+## Using the API
+
+To send a request to the Gemini API using the [Python SDK](https://github.com/google-gemini/generative-ai-python), use the following code:
