@@ -34,4 +34,4 @@ tqdm==4.66.4
 typing_extensions==4.11.0
 uritemplate==4.1.1
 urllib3==2.2.2
-Werkzeug==3.0.3
+Werkzeug==3.0.6
