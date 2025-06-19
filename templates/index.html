@@ -32,14 +32,30 @@
     </div>
     <div class="chat-container">
       <div class="messages">
+        {% set ns = namespace(model_content=[]) %}
         {% for message in chat_history %}
-        <div class="message-role {{ 'user' if message.role == 'user' else '' }}">
-          {{ message.role.capitalize() }}
-        </div>
-        <div class="{{ 'user-message' if message.role == 'user' else 'assistant-message' }}">
-          {{ message.content }}
-        </div>
+          {% if message.parts and message.parts[0].text and message.parts[0].text.strip() %}
+            {% if message.role == 'user' %}
+              {% if ns.model_content %}
+                <div class="message-role">Model</div>
+                <div class="assistant-message">{{ ns.model_content | join('') }}</div>
+                {% set ns.model_content = [] %}
+              {% endif %}
+              
+              <div class="message-role user">User</div>
+              <div class="user-message">{{ message.parts[0].text }}</div>
+              
+            {% elif message.role == 'model' %}
+              {% set _ = ns.model_content.append(message.parts[0].text) %}
+            {% endif %}
+            
+          {% endif %}
         {% endfor %}
+        
+        {% if ns.model_content %}
+          <div class="message-role">Model</div>
+          <div class="assistant-message">{{ ns.model_content | join('') }}</div>
+        {% endif %}
       </div>
       <div class="message-input-container">
         <form action="/chat" method="post">
