@@ -341,3 +341,51 @@ body::after {
   border-top: 1px solid #ececf1;
   width: 100%;
 }
+
+.current-file-container {
+  margin-top: 12px;
+}
+
+.current-file-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #f8f9ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-icon {
+  font-size: 24px;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.file-size, .file-time {
+  font-size: 12px;
+  color: #666;
+}
+
+.status-indicator {
+  color: #4285f4;
+  font-weight: 500;
+  font-size: 14px;
+}

@@ -11,6 +11,7 @@ from PIL import Image
 import io
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 from google import genai
 
@@ -26,6 +27,7 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 
 next_message = ""
 next_image = ""
+current_file_info = None
 
 
 def allowed_file(filename):
@@ -39,7 +41,7 @@ def upload_file():
     """Takes in a file, checks if it is valid,
     and saves it for the next request to the API
     """
-    global next_image
+    global next_image, current_file_info
 
     if "file" not in request.files:
         return jsonify(success=False, message="No file part")
@@ -55,6 +57,15 @@ def upload_file():
         file_stream = io.BytesIO(file.read())
         file_stream.seek(0)
         next_image = Image.open(file_stream)
+
+        # Store file info
+        current_file_info = {
+            "filename": filename,
+            "size": len(file_stream.getvalue()),
+            "upload_time": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "mime_type": file.content_type,
+            "has_file": True
+        }
 
         return jsonify(
             success=True,
@@ -92,11 +103,13 @@ def stream():
     def generate():
         global next_message
         global next_image
+        global current_file_info
         assistant_response_content = ""
 
         if next_image != "":
             response = chat_session.send_message_stream([next_message, next_image])
             next_image = ""
+            current_file_info = None
         else:
             response = chat_session.send_message_stream(next_message)
             next_message = ""
@@ -107,3 +120,26 @@ def stream():
 
     return Response(stream_with_context(generate()),
                     mimetype="text/event-stream")
+
+@app.route("/get_files", methods=["GET"])
+def get_files():
+    """Get current file info"""
+    global current_file_info, next_image
+    
+    if next_image != "" and current_file_info: # if there is a file, return the file info
+        return jsonify({
+            "success": True,
+            "has_file": True,
+            "file": {
+                "filename": current_file_info["filename"],
+                "size": current_file_info["size"],
+                "upload_time": current_file_info["upload_time"],
+                "mime_type": current_file_info["mime_type"]
+            }
+        })
+    else: # if there is no file, return None
+        return jsonify({
+            "success": True,
+            "has_file": False,
+            "file": None
+        })
