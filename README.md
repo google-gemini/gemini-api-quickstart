@@ -68,7 +68,7 @@ for message in chat.get_history():
 7. Run the app:
 
 ```bash
-$ flask run
+$ flask run --port=8000
 ```
 
-You should now be able to access the app from your browser at the following URL: [http://localhost:5000](http://localhost:5000)!
+You should now be able to access the app from your browser at the following URL: [http://localhost:8000](http://localhost:8000)!
