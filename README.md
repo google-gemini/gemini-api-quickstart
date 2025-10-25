@@ -72,3 +72,41 @@ $ flask run
 ```
 
 You should now be able to access the app from your browser at the following URL: [http://localhost:5000](http://localhost:5000)!
+
+## Troubleshooting: DefaultCredentialsError / missing credentials
+
+If you see an error like:
+
+```
+google.auth.exceptions.DefaultCredentialsError: Your default credentials were not found.
+```
+
+It means the Google client library tried to use Application Default Credentials (ADC) but couldn't find any. You have three common options to fix this:
+
+1) Use an API key (recommended for this quickstart)
+
+- Add your Gemini API key to the repository `.env` file as `GOOGLE_API_KEY=your_api_key` or export it in your shell:
+
+```bash
+export GOOGLE_API_KEY="YOUR_GEMINI_API_KEY"
+flask run
+```
+
+2) Use Application Default Credentials (for user credentials)
+
+- Install and authenticate with the Google Cloud SDK and run:
+
+```bash
+gcloud auth application-default login
+```
+
+3) Use a service account JSON key (server-to-server)
+
+- Create a service account in your Google Cloud project, download the JSON key file, and set the path:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+flask run
+```
+
+This change prevents the app from crashing when credentials are missing. Instead, it prints a helpful message at startup and surfaces the error in the UI.
